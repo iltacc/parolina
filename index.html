@@ -136,7 +136,7 @@ const $ = id => document.getElementById(id);
 
 const norm = s => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z\s]/g, " ");
 const toList = s => [...new Set(norm(s).split(/\s+/).filter(w => w.length >= 3 && w.length <= 10))];
-const POOL_GENERALE = toList(GENERALI);
+const POOL_GENERALE = toList(GENERALI + " " + NOMI + " " + CITTA + " " + NAZIONI + " " + STORIA);
 for (const k in TEMI) { TEMI[k].chiaviL = toList(TEMI[k].chiavi + " " + k); TEMI[k].paroleL = toList(TEMI[k].parole); }
 
 // Numero casuale sicuro e senza bias in [0, n)

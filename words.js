@@ -160,3 +160,73 @@ const TEMI = {
 };
 
 const SPECIALI = "!?@#$%&*+=";
+
+// Nomi propri, città, nazioni e luoghi storici (inclusi anche nelle parole generali)
+const NOMI = `
+marco luca paolo giulia sara chiara anna maria giorgio franco
+matteo andrea davide simone fabio enrico pietro carlo bruno sergio
+elena laura silvia marta lucia rosa irene paola vittoria beatrice
+alessio dario elisa federica gianni lorenzo nicola riccardo stefano tommaso
+aurora bianca camilla emma greta ilaria ludovica noemi sofia viola
+john paul peter james david oliver harry jack thomas george
+mary emily sophie alice grace lucy olivia hannah chloe laura
+pablo diego carlos juan pedro carmen lola elena rosa ines
+pierre louis jules hugo marie claire juliette camille chloe lea
+hans otto karl felix lukas anna greta heidi frida klara
+igor ivan boris olga nadia sasha mila ahmed omar layla
+yuki kenji akira hana mei chen ravi amara kofi zara`;
+
+const CITTA = `
+roma milano napoli torino palermo genova bologna firenze bari catania
+venezia verona messina padova trieste brescia parma modena reggio perugia
+livorno cagliari foggia rimini salerno ferrara sassari latina monza siracusa
+pescara bergamo vicenza trento bolzano novara piacenza ancona arezzo udine
+lecce pisa siena lucca como assisi matera urbino ravenna mantova
+cremona pavia aosta potenza taranto ragusa trapani cosenza viterbo capri
+parigi londra madrid berlino vienna praga lisbona atene dublino oslo
+stoccolma helsinki varsavia budapest zurigo ginevra bruxelles amsterdam monaco lione
+marsiglia nizza siviglia valencia porto cracovia mosca istanbul cairo tunisi
+dubai tokyo kyoto osaka pechino shanghai seul delhi mumbai bangkok
+sydney melbourne toronto montreal boston chicago dallas miami denver seattle
+houston lima bogota quito santiago caracas havana rio bahia dakar
+nairobi lagos accra marrakech tangeri smirne beirut damasco baghdad teheran`;
+
+const NAZIONI = `
+italia francia spagna germania austria svizzera belgio olanda grecia portogallo
+irlanda scozia galles inghilterra norvegia svezia danimarca finlandia islanda polonia
+ungheria romania bulgaria croazia serbia albania slovenia malta cipro turchia
+russia ucraina egitto marocco tunisia algeria libia kenya nigeria ghana
+etiopia somalia sudan congo angola senegal mali niger ciad gabon
+india cina giappone corea vietnam laos nepal tibet iran iraq
+siria libano israele giordania oman qatar yemen kuwait
+canada messico cuba brasile argentina cile peru bolivia ecuador colombia
+venezuela uruguay paraguay panama haiti giamaica australia samoa tonga figi`;
+
+const STORIA = `
+waterloo solferino magenta custoza lepanto legnano caporetto vittorio piave isonzo
+marengo austerlitz jena lipsia borodino trafalgar verdun somme marna ypres
+hastings azincourt poitiers canne zama alesia farsalo azio pidna maratona
+salamina platea termopili troia sparta micene cnosso delfi olimpia tebe
+pompei ercolano paestum ostia tivoli canossa pontida calatafimi aspromonte mentana
+alamein stalingrado normandia dunkerque tobruk anzio cassino salerno okinawa midway
+gettysburg yorktown alamo saratoga lexington concord appomattox shiloh
+cartagine babilonia ninive persepoli petra palmira giza luxor tebe karnak
+machu cuzco tikal teotihuacan angkor ayutthaya kyoto nara gerusalemme bisanzio
+colosseo pantheon partenone acropoli stonehenge versailles alhambra vesuvio etna camelot`;
+
+TEMI.nomi = {
+  chiavi: "nomi nome persone persona amici famiglia bambini figli",
+  parole: NOMI
+};
+TEMI.citta = {
+  chiavi: "citta citta' metropoli capitali capitale paesi viaggio mondo",
+  parole: CITTA
+};
+TEMI.nazioni = {
+  chiavi: "nazioni nazione stati stato paesi geografia bandiere mondo continenti",
+  parole: NAZIONI
+};
+TEMI.storia = {
+  chiavi: "storia storico storica battaglia battaglie guerra guerre risorgimento napoleone romani antico antica archeologia impero",
+  parole: STORIA
+};
