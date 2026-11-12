@@ -281,6 +281,16 @@ cefalo muggine aringa baccala stoccafisso platessa halibut tilapia pangasio pira
 cavalluccio pesce palla pagliaccio guppy molly discus scalare neon cobite
 lampuga leccia aguglia boga zerro menola salpa occhiata mormora ombrina`;
 
+// Razze di cani
+const CANI = `
+labrador golden beagle barboncino bassotto boxer bulldog carlino chihuahua dalmata
+dobermann rottweiler husky malamute samoiedo akita shiba chow levriero whippet
+setter pointer bracco segugio spinone cocker spaniel maltese volpino pastore
+maremmano bergamasco corso mastino terranova sanbernardo alano collie border shih
+yorkshire jack russell schnauzer pinscher pechinese lhasa bichon papillon spitz
+basenji saluki afgano borzoi dingo kelpie corgi bovaro pitbull amstaf
+weimaraner vizsla lagotto cirneco pug poodle schipperke briard beauceron leonberger`;
+
 // Vocabolario completo: tutte le liste insieme
-const VOCABOLARIO = [GENERALI, PESCI, NOMI, CITTA, NAZIONI, STORIA, CANZONI, CANTANTI, VEGETALI,
+const VOCABOLARIO = [GENERALI, PESCI, CANI, NOMI, CITTA, NAZIONI, STORIA, CANZONI, CANTANTI, VEGETALI,
   ...Object.values(TEMI).map(t => t.parole)].join(" ");

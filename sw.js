@@ -1,5 +1,5 @@
 // Cache per funzionare anche offline
-const CACHE = "parolina-v5";
+const CACHE = "parolina-v6";
 const FILES = ["./", "index.html", "words.js", "manifest.webmanifest", "icon-180.png", "icon-512.png"];
 self.addEventListener("install", e => e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES))));
 self.addEventListener("activate", e => e.waitUntil(
