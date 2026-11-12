@@ -271,6 +271,16 @@ olmo tiglio cipresso larice ulivo vite ortensia peonia dalia papavero
 ninfea loto basilico salvia timo origano menta prezzemolo rosmarino alloro
 erica fucsia gardenia iris narciso croco giacinto oleandro bouganville ginestra`;
 
+// Pesci (di mare e d'acqua dolce)
+const PESCI = `
+tonno salmone trota sogliola orata branzino spigola merluzzo nasello sardina
+acciuga alice sgombro dentice cernia ricciola palamita sarago pagello triglia
+rombo rana pescatrice coda razza murena grongo anguilla luccio carpa
+tinca persico storione pesce spada squalo manta barracuda pagro scorfano
+cefalo muggine aringa baccala stoccafisso platessa halibut tilapia pangasio piranha
+cavalluccio pesce palla pagliaccio guppy molly discus scalare neon cobite
+lampuga leccia aguglia boga zerro menola salpa occhiata mormora ombrina`;
+
 // Vocabolario completo: tutte le liste insieme
-const VOCABOLARIO = [GENERALI, NOMI, CITTA, NAZIONI, STORIA, CANZONI, CANTANTI, VEGETALI,
+const VOCABOLARIO = [GENERALI, PESCI, NOMI, CITTA, NAZIONI, STORIA, CANZONI, CANTANTI, VEGETALI,
   ...Object.values(TEMI).map(t => t.parole)].join(" ");

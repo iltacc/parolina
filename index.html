@@ -152,7 +152,7 @@ function generate() {
 
   const words = [];
   let bits = 0;
-  // Numero e simbolo attaccati all'ultima parola: "Gatto-Luna47!"
+  // Numero e simbolo non aggiungono separatori: la lunghezza resta la stessa
   const build = () => words.join(sep) + tail;
   // Sceglie le parole in modo da arrivare vicino alla lunghezza richiesta
   while (build().length < len || words.length < 2) {
@@ -173,7 +173,24 @@ function generate() {
     bits += Math.log2(cand.length);
     words.push(up ? w[0].toUpperCase() + w.slice(1) : w);
   }
-  current = build();
+  // Numero e simbolo in posizione casuale: all'inizio, tra le parole o alla fine,
+  // attaccati alla parola vicina (es. "42Gatto-Luna!" o "Gatto!-Luna42")
+  const n = words.length;
+  const extra = Array.from({ length: n + 1 }, () => []);   // 0 = inizio, i = dopo la parola i
+  const items = [];
+  if (num) items.push({ t: num, say: num });
+  if (sp) items.push({ t: sp, say: SAY[sp] });
+  for (const it of items) { extra[rnd(n + 1)].push(it); bits += Math.log2(n + 1); }
+  extra.forEach(e => { if (e.length === 2 && rnd(2)) { e.reverse(); } });
+  if (items.length === 2 && extra.some(e => e.length === 2)) bits += 1;
+
+  const out = [], parts = [];
+  words.forEach((w, i) => {
+    const pre = i === 0 ? extra[0] : [], post = extra[i + 1];
+    out.push(pre.map(x => x.t).join("") + w + post.map(x => x.t).join(""));
+    parts.push(...pre.map(x => x.say), w.toLowerCase(), ...post.map(x => x.say));
+  });
+  current = out.join(sep);
 
   // Visualizzazione con colori
   const esc = c => c.replace(/[&<>]/g, m => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;" }[m]));
@@ -181,9 +198,6 @@ function generate() {
     /\d/.test(c) ? `<span class="n">${c}</span>` : SPECIALI.includes(c) ? `<span class="s">${esc(c)}</span>` : esc(c)).join("") + "</span>";
 
   // Come pronunciarla
-  const parts = words.map(w => w.toLowerCase());
-  if (num) parts.push(num);
-  if (sp) parts.push(SAY[sp]);
   $("say").textContent = "Si legge: " + parts.join(" · ") + (sep ? `  (parole separate da “${SAY[sep]}”)` : "");
 
   // Stima della robustezza (entropia in bit)
