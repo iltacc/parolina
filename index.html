@@ -118,7 +118,7 @@
     <div class="row">
       <div>Separatore</div>
       <select id="sep">
-        <option value="-">trattino  -</option>
+        <option value="-" selected>trattino  -</option>
         <option value=".">punto  .</option>
         <option value="_">underscore  _</option>
         <option value="">nessuno</option>
@@ -186,10 +186,26 @@ function generate() {
   const tail = num + sp;
 
   const words = [];
-  const build = () => words.join(sep) + (tail ? sep + tail : "");
-  while (build().length < len || words.length < (themes.length ? 4 : 3)) {
-    let w = pick(pool);
-    if (words.includes(w) && pool.length > 10) continue;
+  let bits = 0;
+  // Numero e simbolo attaccati all'ultima parola: "Gatto-Luna47!"
+  const build = () => words.join(sep) + tail;
+  // Sceglie le parole in modo da arrivare vicino alla lunghezza richiesta
+  while (build().length < len || words.length < 2) {
+    const used = build().length + (words.length ? sep.length : 0);
+    const rem = len - used;
+    let cand;
+    if (words.length >= 1 && rem <= 8) {
+      // ultima parola: deve chiudere la lunghezza senza sforare troppo
+      const r = Math.max(rem, 3);
+      cand = pool.filter(w => w.length >= r && w.length <= r + 2);
+      if (cand.length < 5) cand = pool.filter(w => w.length >= r);
+    } else {
+      cand = pool.filter(w => w.length <= 6);
+    }
+    cand = cand.filter(w => !words.some(x => x.toLowerCase() === w));
+    if (!cand.length) cand = pool;
+    const w = pick(cand);
+    bits += Math.log2(cand.length);
     words.push(up ? w[0].toUpperCase() + w.slice(1) : w);
   }
   current = build();
@@ -203,10 +219,9 @@ function generate() {
   const parts = words.map(w => w.toLowerCase());
   if (num) parts.push(num);
   if (sp) parts.push(SAY[sp]);
-  $("say").textContent = "Si legge: " + parts.join(" · ") + (sep ? `  (separate da “${SAY[sep]}”)` : "");
+  $("say").textContent = "Si legge: " + parts.join(" · ") + (sep ? `  (parole separate da “${SAY[sep]}”)` : "");
 
   // Stima della robustezza (entropia in bit)
-  let bits = words.length * Math.log2(pool.length);
   if (dig) bits += Math.log2(90);
   if (spc) bits += Math.log2(SPECIALI.length);
   const b = Math.round(bits);
