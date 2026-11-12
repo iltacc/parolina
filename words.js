@@ -230,3 +230,47 @@ TEMI.storia = {
   chiavi: "storia storico storica battaglia battaglie guerra guerre risorgimento napoleone romani antico antica archeologia impero",
   parole: STORIA
 };
+
+// Titoli di canzoni famose (italiane e straniere, parola principale del titolo)
+const CANZONI = `
+azzurro volare caruso albachiara margherita emozioni gloria felicita generale rimmel
+alice titanic soldi brividi sally vivere sapore tintarella malafemmena funiculi
+anna gianna laura ancora insieme adesso ragazzo bambola serenata mediterraneo
+arrivederci estate notte splendida certe pensiero amore mamma ciao parole
+yesterday imagine thriller hello halo yellow creep clocks roxanne layla
+angie jolene vogue heroes respect believe despacito macarena gasolina bailando
+africa toxic umbrella happy paradise fernando chiquitita michelle help lola
+suzanne starman changes titanium hallelujah smooth faith royals shallow dancing`;
+
+// Cantanti e gruppi (italiani e stranieri)
+const CANTANTI = `
+mina battisti vasco ligabue jovanotti zucchero pausini ramazzotti baglioni dalla
+morandi celentano mengoni elisa giorgia mahmood annalisa ultimo gazzelle ferro
+guccini venditti battiato modugno carosone gaber jannacci renga nek raf
+tozzi masini cocciante paoli tenco endrigo bocelli pavarotti berte rettore
+oxa pravo cremonini negramaro maneskin elodie emma noemi arisa marracash
+madonna bowie prince elvis sting adele shakira rihanna beyonce eminem
+drake coldplay queen abba beatles oasis blur muse nirvana metallica
+bono elton lennon jagger dylan marley santana sinatra presley cher
+dido sade enya bjork moby avicii lizzo dua sia rosalia`;
+
+// Vegetali: verdure, frutta, piante, fiori ed erbe
+const VEGETALI = `
+carota zucchina melanzana peperone cipolla aglio patata sedano finocchio carciofo
+cavolo broccolo spinaci bietola lattuga rucola radicchio indivia porro asparago
+fagiolino pisello cece lenticchia fava zucca cetriolo rapa ravanello pomodoro
+mais scalogno cardo cicoria scarola topinambur
+mela pera pesca albicocca susina prugna ciliegia fragola lampone mirtillo
+ribes uva fico kiwi banana ananas mango papaya cocco dattero
+melone anguria limone arancia mandarino cedro pompelmo melograno castagna noce
+nocciola mandorla pistacchio avocado lime cachi nespola giuggiola mora clementina
+rosa tulipano giglio orchidea girasole margherita violetta lavanda gelsomino geranio
+ciclamino begonia azalea camelia magnolia mimosa glicine edera felce cactus
+agave aloe bambu palma pino abete quercia faggio betulla salice
+olmo tiglio cipresso larice ulivo vite ortensia peonia dalia papavero
+ninfea loto basilico salvia timo origano menta prezzemolo rosmarino alloro
+erica fucsia gardenia iris narciso croco giacinto oleandro bouganville ginestra`;
+
+// Vocabolario completo: tutte le liste insieme
+const VOCABOLARIO = [GENERALI, NOMI, CITTA, NAZIONI, STORIA, CANZONI, CANTANTI, VEGETALI,
+  ...Object.values(TEMI).map(t => t.parole)].join(" ");

@@ -66,10 +66,6 @@
   }
   input[type=text] { width: 100%; padding: 12px; }
   label.t { display: block; font-weight: 600; margin-bottom: 8px; }
-  #topicInfo { font-size: 13px; color: var(--muted); margin-top: 8px; min-height: 18px; }
-  #topicInfo.ok { color: var(--ok); }
-  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
-  .chips button { padding: 6px 10px; font-size: 13px; font-weight: 500; background: var(--bg); color: var(--text); border-radius: 20px; }
   footer { text-align: center; color: var(--muted); font-size: 12px; margin-top: 8px; }
 </style>
 </head>
@@ -87,13 +83,6 @@
       <button id="gen">↻ Nuova</button>
       <button id="copy">Copia</button>
     </div>
-  </section>
-
-  <section class="card">
-    <label class="t" for="topic">Argomento (facoltativo)</label>
-    <input type="text" id="topic" placeholder="es. mare, cucina, calcio, spazio…" autocomplete="off" autocapitalize="off" enterkeyhint="done">
-    <div id="topicInfo"></div>
-    <div class="chips" id="chips"></div>
   </section>
 
   <section class="card">
@@ -136,8 +125,7 @@ const $ = id => document.getElementById(id);
 
 const norm = s => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z\s]/g, " ");
 const toList = s => [...new Set(norm(s).split(/\s+/).filter(w => w.length >= 3 && w.length <= 10))];
-const POOL_GENERALE = toList(GENERALI + " " + NOMI + " " + CITTA + " " + NAZIONI + " " + STORIA);
-for (const k in TEMI) { TEMI[k].chiaviL = toList(TEMI[k].chiavi + " " + k); TEMI[k].paroleL = toList(TEMI[k].parole); }
+const POOL = toList(VOCABOLARIO);
 
 // Numero casuale sicuro e senza bias in [0, n)
 function rnd(n) {
@@ -146,29 +134,6 @@ function rnd(n) {
   return a[0] % n;
 }
 const pick = arr => arr[rnd(arr.length)];
-
-// Trova i temi collegati al testo scritto dall'utente
-function findThemes(text) {
-  const tokens = norm(text).split(/\s+/).filter(t => t.length >= 3);
-  if (!tokens.length) return [];
-  const hit = [];
-  for (const k in TEMI) {
-    const t = TEMI[k];
-    const match = tokens.some(tok =>
-      t.chiaviL.some(c => c === tok || (tok.length >= 4 && (c.startsWith(tok) || tok.startsWith(c)))) ||
-      t.paroleL.includes(tok));
-    if (match) hit.push(k);
-  }
-  return hit;
-}
-
-function currentPool() {
-  const themes = findThemes($("topic").value);
-  if (!themes.length) return { pool: POOL_GENERALE, themes };
-  const set = new Set();
-  themes.forEach(k => TEMI[k].paroleL.forEach(w => set.add(w)));
-  return { pool: [...set], themes };
-}
 
 const SAY = { "!":"punto esclamativo", "?":"punto interrogativo", "@":"chiocciola", "#":"cancelletto",
   "$":"dollaro", "%":"percento", "&":"e commerciale", "*":"asterisco", "+":"più", "=":"uguale",
@@ -179,7 +144,7 @@ let current = "";
 function generate() {
   const len = +$("len").value, up = $("upper").checked, dig = $("digits").checked,
         spc = $("special").checked, sep = $("sep").value;
-  const { pool, themes } = currentPool();
+  const pool = POOL;
 
   const num = dig ? String(rnd(90) + 10) : "";   // 10–99: due cifre, facili da dire
   const sp = spc ? pick(SPECIALI) : "";
@@ -231,12 +196,6 @@ function generate() {
   $("lenTxt").textContent = `${current.length} caratteri`;
   $("bar").style.width = pct + "%"; $("bar").style.background = col;
 
-  // Info argomento
-  const info = $("topicInfo");
-  if (!$("topic").value.trim()) { info.textContent = ""; info.className = ""; }
-  else if (themes.length) { info.textContent = "Tema: " + themes.join(", "); info.className = "ok"; }
-  else { info.textContent = "Argomento non riconosciuto: uso parole generiche. Prova un suggerimento qui sotto."; info.className = ""; }
-
   const btn = $("copy"); btn.textContent = "Copia"; btn.classList.remove("done");
 }
 
@@ -252,16 +211,8 @@ async function copy() {
   if (navigator.vibrate) navigator.vibrate(30);
 }
 
-// Suggerimenti argomento
-for (const k in TEMI) {
-  const c = document.createElement("button");
-  c.textContent = k;
-  c.onclick = () => { $("topic").value = k; save(); generate(); };
-  $("chips").appendChild(c);
-}
-
 // Preferenze salvate
-const KEYS = ["len", "upper", "digits", "special", "sep", "topic"];
+const KEYS = ["len", "upper", "digits", "special", "sep"];
 function save() {
   const o = {};
   KEYS.forEach(k => o[k] = $(k).type === "checkbox" ? $(k).checked : $(k).value);
@@ -276,8 +227,6 @@ $("lenVal").textContent = $("len").value;
 $("len").addEventListener("input", () => { $("lenVal").textContent = $("len").value; generate(); });
 ["upper", "digits", "special", "sep"].forEach(k => $(k).addEventListener("change", () => { save(); generate(); }));
 $("len").addEventListener("change", save);
-let tmr; $("topic").addEventListener("input", () => { clearTimeout(tmr); tmr = setTimeout(() => { save(); generate(); }, 300); });
-$("topic").addEventListener("keydown", e => { if (e.key === "Enter") e.target.blur(); });
 $("gen").onclick = generate;
 $("copy").onclick = copy;
 
