@@ -6,6 +6,7 @@ Web app per iPhone che genera password casuali, facili da pronunciare, con parol
 - Lunghezza minima regolabile (default 12)
 - Vocabolario di oltre 1.400 parole: parole comuni, nomi di persona, città, nazioni, luoghi storici, pesci, razze di cani, canzoni, cantanti, frutta, verdura e piante
 - Tasto **Copia** negli appunti
+- Promemoria "dove la uso": aggiunge password e sito sempre alla stessa nota "Password" dell'iPhone (tramite il comando rapido "Parolina", istruzioni nell'app)
 - Generazione sicura (`crypto.getRandomValues`), tutto in locale, funziona offline
 
 ## Installazione su iPhone

@@ -67,6 +67,16 @@
   input[type=text] { width: 100%; padding: 12px; }
   label.t { display: block; font-weight: 600; margin-bottom: 8px; }
   footer { text-align: center; color: var(--muted); font-size: 12px; margin-top: 8px; }
+  .field { margin-bottom: 12px; }
+  #saveNote { background: #ffd60a; color: #111; width: 100%; margin-top: 4px; }
+  #saveNote.done { background: var(--ok); color: #fff; }
+  #share { background: var(--line); color: var(--text); width: 100%; margin-top: 10px; font-weight: 500; }
+  #saveMsg { font-size: 13px; color: var(--muted); margin-top: 8px; min-height: 18px; text-align: center; }
+  details { margin-top: 12px; font-size: 14px; color: var(--muted); }
+  details summary { cursor: pointer; color: var(--accent); font-weight: 600; }
+  details ol { padding-left: 20px; margin: 8px 0 0; }
+  details li { margin-bottom: 6px; }
+  details b { color: var(--text); }
 </style>
 </head>
 <body>
@@ -113,6 +123,25 @@
         <option value="">nessuno</option>
       </select>
     </div>
+  </section>
+
+  <section class="card">
+    <label class="t">Ricordami dove la uso</label>
+    <div class="field"><input type="text" id="where" placeholder="Dove la uso (es. Amazon, Banca, Wi-Fi)" autocomplete="off" enterkeyhint="next"></div>
+    <div class="field"><input type="text" id="user" placeholder="Utente / note (facoltativo)" autocomplete="off" autocapitalize="off" enterkeyhint="done"></div>
+    <button id="saveNote">📝 Aggiungi alla nota “Password”</button>
+    <button id="share">Condividi… (scegli tu dove salvare)</button>
+    <div id="saveMsg"></div>
+    <details>
+      <summary>Prima volta? Configura in 1 minuto</summary>
+      <ol>
+        <li>Apri <b>Note</b> e crea una nota chiamata <b>Password</b> (non bloccata).</li>
+        <li>Apri <b>Comandi Rapidi</b> → tocca <b>+</b> → rinomina il comando in <b>Parolina</b> (esattamente così).</li>
+        <li>Aggiungi l’azione <b>Aggiungi a nota</b> (o “Aggiungi alla nota”).</li>
+        <li>Come testo scegli <b>Input comando rapido</b>, come nota scegli <b>Password</b>.</li>
+        <li>Fatto. Da ora il pulsante giallo aggiunge ogni password in fondo alla stessa nota. La prima volta iOS potrebbe chiederti il permesso: tocca <b>Consenti sempre</b>.</li>
+      </ol>
+    </details>
   </section>
 
   <footer>Generata sul tuo iPhone con crittografia sicura. Nulla viene inviato in rete.</footer>
@@ -243,6 +272,39 @@ $("len").addEventListener("input", () => { $("lenVal").textContent = $("len").va
 $("len").addEventListener("change", save);
 $("gen").onclick = generate;
 $("copy").onclick = copy;
+
+// Promemoria: testo da salvare nella nota
+function noteText() {
+  const where = $("where").value.trim() || "(senza nome)";
+  const user = $("user").value.trim();
+  const d = new Date().toLocaleDateString("it-IT");
+  return `\n🔑 ${where}\nPassword: ${current}` + (user ? `\nUtente/note: ${user}` : "") + `\nCreata il ${d}\n`;
+}
+function saved(msg) {
+  const b = $("saveNote"); b.textContent = "✓ Inviata alla nota"; b.classList.add("done");
+  $("saveMsg").textContent = msg;
+  setTimeout(() => { b.textContent = "📝 Aggiungi alla nota “Password”"; b.classList.remove("done"); }, 4000);
+}
+$("saveNote").onclick = () => {
+  if (!$("where").value.trim()) { $("saveMsg").textContent = "Scrivi prima dove usi questa password."; $("where").focus(); return; }
+  location.href = "shortcuts://run-shortcut?name=" + encodeURIComponent("Parolina") +
+                  "&input=text&text=" + encodeURIComponent(noteText());
+  saved("Se non succede nulla, configura il comando rapido (istruzioni qui sotto).");
+};
+$("share").onclick = async () => {
+  const text = noteText();
+  try {
+    if (!navigator.share) throw new Error();
+    await navigator.share({ text });
+    $("saveMsg").textContent = "Nel menu scegli Note: puoi aggiungere il testo a una nota esistente.";
+  } catch (e) {
+    if (e && e.name === "AbortError") return;
+    try { await navigator.clipboard.writeText(text); $("saveMsg").textContent = "Condivisione non disponibile: testo copiato, incollalo nella nota."; }
+    catch { $("saveMsg").textContent = "Condivisione non disponibile qui."; }
+  }
+};
+$("where").addEventListener("keydown", e => { if (e.key === "Enter") $("user").focus(); });
+$("user").addEventListener("keydown", e => { if (e.key === "Enter") e.target.blur(); });
 
 generate();
 if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
